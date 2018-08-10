@@ -1,17 +1,13 @@
 package roma.wallevader;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.nfc.Tag;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -52,12 +48,18 @@ public class topScore extends AppCompatActivity {
         });
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference("Top 5 places");
-        scores = readFromDatabase();
+        Log.d("roomm", "Value is: " + scores);
+        //writeToDatabase();
+        readFromDatabase();
+       Log.d("roomm", "Value is: " + scores);
+        //updateScoreBoard(scores);
+        //checkNewScore(85);
+
 
 
     }
     public boolean checkNewScore(int newScore){
-        String tmp;
+
        if(newScore > Integer.valueOf(scores[4])){
            if (newScore > Integer.valueOf(scores[3])){
                if (newScore > Integer.valueOf(scores[2])){
@@ -86,7 +88,7 @@ public class topScore extends AppCompatActivity {
            }else {
                scores[4] = String.valueOf(newScore);
            }
-           writeToDatabase(scores);
+           //writeToDatabase();
            return true;
        }else return false;
     }
@@ -100,28 +102,31 @@ public class topScore extends AppCompatActivity {
         fifthPlace.setText(scores[4]);
     }
 
-    public void writeToDatabase(String[] scores) {
+    public void writeToDatabase() {
         // Write a message to the database
-        String tmp;
-        StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < scores.length; i++)
-            tmp = String.join(",", scores);
+         //String tmp="100:90:85:80:70";
+       // StringBuilder builder = new StringBuilder();
 
-        myRef.setValue(scores);
+       // for (int i = 0; i < scores.length; i++)
+      //  String tmp = String.join(":", scores);
+       // Log.d("romans", "Value is: " + tmp);
+        myRef.setValue("100:90:80:70:60");
     }
 
     public String[] readFromDatabase() {
-// Read from the database
+        // Read from the database
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
                 String value = dataSnapshot.getValue(String.class);
-                scores = value.split(",");
                 Log.d("logger", "Value is: " + value);
-            }
+                scores = value.split(":");
+                //for (int i = 0; i < scores.length; i++)
+                //    Log.d("scores", "score is: " + scores[i]);
 
+                updateScoreBoard(scores);
+
+                }
             @Override
             public void onCancelled(DatabaseError error) {
                 // Failed to read value
