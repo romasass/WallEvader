@@ -48,7 +48,7 @@ public class topScore extends AppCompatActivity {
 
         //writeToDatabase();
         readFromDatabase();
-        //updateScoreBoard(scores1);
+        //updateScoreBoard();
         //checkNewScore(85,scores1);
 
     }
@@ -88,7 +88,7 @@ public class topScore extends AppCompatActivity {
         } else return false;
     }
 
-    public void updateScoreBoard(String[] scores) {
+    public void updateScoreBoard() {
         firstPlace.setText(scores1[0]);
         secPlace.setText(scores1[1]);
         thrdPlace.setText(scores1[2]);
@@ -99,8 +99,7 @@ public class topScore extends AppCompatActivity {
     public void writeToDatabase(String[] scores) {
         // Write a message to the database
         String tmp = String.join(":", scores);
-        Log.d("romans", "Value is: " + tmp);
-        //myRef.setValue(tmp);
+        myRef.setValue(tmp);
         //myRef.setValue("100:90:80:70:60");
     }
 
@@ -115,8 +114,7 @@ public class topScore extends AppCompatActivity {
                 Log.d("logger", "Value is: " + value);
                 String[] scores = value.split(":");
                 scores1 = scores;
-                updateScoreBoard(scores);
-                checkNewScore(85,scores);
+                updateScoreBoard();
             }
 
             @Override
