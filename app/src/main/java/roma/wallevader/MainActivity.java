@@ -19,6 +19,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         play = findViewById(R.id.btnPlay);
+        play.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //startActivity(new Intent(MainActivity.this, .class));
+            }
+        });
 
         highScore= findViewById(R.id.btnHighScore);
         highScore.setOnClickListener(new View.OnClickListener() {
