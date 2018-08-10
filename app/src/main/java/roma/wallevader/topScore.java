@@ -52,20 +52,65 @@ public class topScore extends AppCompatActivity {
         });
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference("Top 5 places");
-        //writeToDatabase();
-        readFromDatabase();
+        scores = readFromDatabase();
 
 
     }
+    public boolean checkNewScore(int newScore){
+        String tmp;
+       if(newScore > Integer.valueOf(scores[4])){
+           if (newScore > Integer.valueOf(scores[3])){
+               if (newScore > Integer.valueOf(scores[2])){
+                   if (newScore > Integer.valueOf(scores[1])){
+                       if (newScore > Integer.valueOf(scores[0])){
+                           scores[4]= scores[3];
+                           scores[3] = scores[2];
+                           scores[2] = scores[1];
+                           scores[1] = scores[0];
+                           scores[0] = String.valueOf(newScore);
+                       }else{
+                           scores[4]= scores[3];
+                           scores[3] = scores[2];
+                           scores[2] = scores[1];
+                           scores[1] = String.valueOf(newScore);
+                       }
+                   }else{
+                       scores[4]= scores[3];
+                       scores[3] = scores[2];
+                       scores[2] = String.valueOf(newScore);
+                       }
+               }else{
+                   scores[4]= scores[3];
+                   scores[3] = String.valueOf(newScore);
+               }
+           }else {
+               scores[4] = String.valueOf(newScore);
+           }
+           writeToDatabase(scores);
+           return true;
+       }else return false;
+    }
 
+    public void updateScoreBoard(String[] scores){
 
-    public void writeToDatabase() {
+        firstPlace.setText(scores[0]);
+        secPlace.setText(scores[1]);
+        thrdPlace.setText(scores[2]);
+        fourthPlace.setText(scores[3]);
+        fifthPlace.setText(scores[4]);
+    }
+
+    public void writeToDatabase(String[] scores) {
         // Write a message to the database
+        String tmp;
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < scores.length; i++)
+            tmp = String.join(",", scores);
 
-        myRef.setValue("100,90,85,80,70");
+        myRef.setValue(scores);
     }
 
-    public void readFromDatabase() {
+    public String[] readFromDatabase() {
 // Read from the database
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -75,11 +120,6 @@ public class topScore extends AppCompatActivity {
                 String value = dataSnapshot.getValue(String.class);
                 scores = value.split(",");
                 Log.d("logger", "Value is: " + value);
-                firstPlace.setText(scores[0]);
-                secPlace.setText(scores[1]);
-                thrdPlace.setText(scores[2]);
-                fourthPlace.setText(scores[3]);
-                fifthPlace.setText(scores[4]);
             }
 
             @Override
@@ -88,5 +128,6 @@ public class topScore extends AppCompatActivity {
                 Log.w("logger", "Failed to read value.", error.toException());
             }
         });
+        return scores;
     }
 }
